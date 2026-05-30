@@ -358,11 +358,8 @@ function renderBudget(){
 document.getElementById('secretTrigger').addEventListener('click',()=>{
   secretTapCount++; clearTimeout(secretTapTimer);
   secretTapTimer=setTimeout(()=>{secretTapCount=0;},800);
-  if(secretTapCount>=2){secretTapCount=0;openBudget();}
-});
-function openBudget(){document.getElementById('budgetOverlay').classList.add('visible');if(!budgetLoaded)fetchBudgetData();}
+ function openBudget(){document.getElementById('budgetOverlay').classList.add('visible');if(!budgetLoaded)fetchBudgetData();}
 function closeBudget(){document.getElementById('budgetOverlay').classList.remove('visible');}
-document.getElementById('budgetOverlay').addEventListener('click',(e)=>{if(e.target===document.getElementById('budgetOverlay'))closeBudget();});
 
 function renderCalendar(){
   document.getElementById('calMonthTitle').textContent=`${MONTHS[viewDate.getMonth()]} ${viewDate.getFullYear()}`;
@@ -435,15 +432,24 @@ function setView(v){
   document.getElementById('btnWeek').classList.toggle('active',v==='week');
   viewDate=new Date();renderCalendar();
 }
-document.getElementById('prevBtn').onclick=()=>{if(currentView==='month')viewDate.setMonth(viewDate.getMonth()-1);else viewDate.setDate(viewDate.getDate()-7);renderCalendar();};
-document.getElementById('nextBtn').onclick=()=>{if(currentView==='month')viewDate.setMonth(viewDate.getMonth()+1);else viewDate.setDate(viewDate.getDate()+7);renderCalendar();};
 
-renderCalendar();
-fetchEvents();
-setInterval(fetchEvents,15*60*1000);
+window.addEventListener('load',()=>{
+  document.getElementById('secretTrigger').addEventListener('click',()=>{
+    secretTapCount++; clearTimeout(secretTapTimer);
+    secretTapTimer=setTimeout(()=>{secretTapCount=0;},800);
+    if(secretTapCount>=2){secretTapCount=0;openBudget();}
+  });
+  document.getElementById('budgetOverlay').addEventListener('click',(e)=>{
+    if(e.target===document.getElementById('budgetOverlay'))closeBudget();
+  });
+  document.getElementById('prevBtn').onclick=()=>{if(currentView==='month')viewDate.setMonth(viewDate.getMonth()-1);else viewDate.setDate(viewDate.getDate()-7);renderCalendar();};
+  document.getElementById('nextBtn').onclick=()=>{if(currentView==='month')viewDate.setMonth(viewDate.getMonth()+1);else viewDate.setDate(viewDate.getDate()+7);renderCalendar();};
+  renderCalendar();
+  fetchEvents();
+  setInterval(fetchEvents,15*60*1000);
+});
 </script>
 </body>
 </html>
-          <button class="cal-nav" id="nextBtn">›</button>
-        </div>
-      </div>
+  if(secretTapCount>=2){secretTapCount=0;openBudget();}
+});
