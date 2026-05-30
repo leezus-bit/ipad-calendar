@@ -279,7 +279,7 @@ if(scope.includes('spreadsheets')&&sheetsToken&&Date.now()<sheetsTokenExpiry-600
     if(!data.access_token)throw new Error(JSON.stringify(data));
     if(scope.includes('calendar')){gcToken=data.access_token;gcTokenExpiry=Date.now()+(data.expires_in*1000);}
 else{sheetsToken=data.access_token;sheetsTokenExpiry=Date.now()+(data.expires_in*1000);}
-    return gcToken;
+    return data.access_token;
   } catch(e){
     document.getElementById('eventList').innerHTML=`<div class="error-msg">⚠️ Auth error:<br><small>${e.message}</small></div>`;
     return null;
