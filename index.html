@@ -354,7 +354,7 @@ function renderBudget(){
     if(!row||!row[1])continue;
     budgetItems.push({type:(row[0]||'Other').trim(),name:row[1].trim(),limit:parseMoney(row[2])});
   }
-  const ccSpend={}; let debitDeposits=0;
+  const ccSpend={}; let debitDep=0;
   for(let i=1;i<budgetData.debit.length;i++){
     const row=budgetData.debit[i]; if(!row)continue;
     const d=parseDate(row[2]); if(!d||d.getMonth()!==selectedMonth||d.getFullYear()!==year)continue;
