@@ -423,7 +423,7 @@ window.onload=function(){
   document.getElementById('nextBtn').onclick=function(){if(curView==='month')viewDate.setMonth(viewDate.getMonth()+1);else viewDate.setDate(viewDate.getDate()+7);renderCalendar();};
   document.getElementById('secretTrigger').addEventListener('click',function(){
     stc++;clearTimeout(stt);stt=setTimeout(function(){stc=0;},800);
-    if(stc>=2){stc=0;openBudget();}
+    if(stc>=2){stc=0;window.open('https://app.monarch.com/cash-flow?breakdown=category&date=2026-05-01&sankey=category&timeframe=month&view=breakdown','_blank');}
   });
   document.getElementById('budgetOverlay').addEventListener('click',function(e){
     if(e.target===document.getElementById('budgetOverlay'))closeBudget();
