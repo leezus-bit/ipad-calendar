@@ -355,14 +355,16 @@ function renderBudget(){
     budgetItems.push({type:(row[0]||'Other').trim(),name:row[1].trim(),limit:parseMoney(row[2])});
   }
   const ccSpend={}; let debitDeposits=0;
-  for(let i=1;i<budgetData.cc.length;i++){
-    const row=budgetData.cc[i]; if(!row)continue;
-    const d=parseDate(row[0]); if(!d||d.getMonth()!==selectedMonth||d.getFullYear()!==year)continue;
-    const type=(row[4]||'').toLowerCase(); const amt=parseMoney(row[5]);
-    if(type==='credit'||amt>0)continue;
-    const rawCat=(row[3]||'').toLowerCase().trim();
-    const budgetCat=CC_CAT_MAP[rawCat]||'Other';
-    ccSpend[budgetCat]=(ccSpend[budgetCat]||0)+Math.abs(amt);
+  for(let i=1;i<budgetData.debit.length;i++){
+    const row=budgetData.debit[i]; if(!row)continue;
+    const d=parseDate(row[2]); if(!d||d.getMonth()!==selectedMonth||d.getFullYear()!==year)continue;
+    const type=(row[3]||'').toLowerCase(); const amt=parseMoney(row[4]);
+    if(type==='credit'){debitDep+=amt;continue;}
+    const desc=(row[1]||'').toLowerCase();
+    let matched='Other';
+    for(const m of DEBIT_KW_MAP){if(m.kw.some(k=>desc.includes(k))){matched=m.cat;break;}}
+    if(matched==='Transfer')continue;
+    debitSpend[matched]=(debitSpend[matched]||0)+amt;
   }
   const debitSpend={}; let debitDep=0;
   for(let i=1;i<budgetData.debit.length;i++){
