@@ -157,7 +157,7 @@ html,body{width:100%;height:100%;background:var(--bg);font-family:'Nunito',sans-
 var SAE="ipad-calendar@crested-trilogy-497902-u5.iam.gserviceaccount.com";
 var PKL=["-----BEGIN PRIVATE KEY-----","MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDfo/sX1XwPrJLV","OFXEnH5deVdMSO8xfbeqaiH0fpjCeJYcfUMdDhxJuBC+wEoCqjuT8evf51Eji8uf","GlQ7YStHgTg8zXn1mCeQrLyY3L5lgSa6Yvcdidrt0UNQ3GsbVoi026qCs0jc5NzO","zyEJi6Z2MgUAxfqzzHVOiY5FhzWg7ZZ06Zw5DWkdCvS2vwA1xx01cuOqG2PZ1rKt","LOvBXikpFzEVjFVjCSS9nVbPA5PFo6K+VjvhGUrHNwsu954m7R5CRdJc7Fq1PC+t","ar96vUBsZF6jcYs7HgiPqVP59AmjXzVrT2pGq8YOb+cpPgwlcX6mgshWG2RgLBx0","EI/s0zdXAgMBAAECggEAWHOybXhNw6NFRdisr4EXx5+k4/KazC/Fczzb5igmAhCQ","in8OitDYZl3LHa7O9uPegYK3AI0sPcteQzS2KPAjHnpgxEeem4DM8T8orqrsERh2","OVTIGSI7eUEBh1tOb3cXxbR16ZDAWkGYhaFNl0lpEqlw6h/jqrZMlT35i81Q7C8e","miuoz9eaQBiyQiPus2j6R2YduDwIg+zxyeiuMr/tTRxFuh8z0o9+YeIYHGn3kj1t","3nTKSd8jcf2aUZEykRbEU/OkB95vbk9+tMdsXZplzj+vTAIfmvd80q+fyHBoinLS","Wnr0IjafYTmAWBjEtcLXIRsCxbsHJ/SNv9hKkMieuQKBgQD5XZXjvyfCt69r/nt9","UlIVSu9WbNqPXfKl9eBxcSsoMHKf1QB9i/M0e3YaQFCXStwO3jmqF86tB2z5Y0hK","Cu8TVf/QBwm5sctRUgC+7uag3XrlbWm/0h4gMbQjjQ4jOWuzj7/npOMMtAvic0C7","6SdWdIOShEvm3czur/E5WTboHwKBgQDlly8HttC0zbYs/CHTGdHcoRWQAtUFsDdU","dFAMCiASAK50iaWTlkiouacFlKOW00CArAgydAUPEbVQ9Us17KROlCguxiew+yfG","BiPu0+sXyV2D5noqoxYkNMTaxutK8RXz909jDj0cahcgGNiC13Ykdms9LhUR/tYh","6lz+ATYpyQKBgFBVhulE9tEzDc9zv2LDN3BmoK4uCUcwk/BFQtYpCCc9XGADZdIM","WQBqWcThPVVQJ46epuMWIl35y3CYPHymAxkulmf1LHvnPEHpchYQrrnaQDJTSkMi","tNPYT1k4ovpUEE9bmw5MP10jT8TXLl6bITIn/Q8hkbZBdDjc85BvHlIvAoGBAImj","Ve2A+qO5w2I6kSiWDQsAgwW/vOdZGgKGbEqbc1h3kh6JOns9GDgWfHvK/Tt5T+0T","tSJSDYpYKmPrefhM8r+s8F4CK19dYh3EJpyR7RlofaiKbmjLNoXkILOrlvlpiKim","dbBDo/052L1ER+BAvTHk0CtwSe9s4ACbGL6qCUeJAoGAGVKpSGzgeP+pFS+XCJdM","nrLGIlFuQ+E1grTBORcw3ZVwb5IiVJvreQm8sgeq8fb2pfQfnF6EyIgSInX8RnM5","lTJH0eCjj4ZjPm+hOtvNgOSAJspRPMHAxYrxKjvWxDHC9Rcgk7ZQZ+rt46giId/R","Ldmzg+ftgPaePivtCcaB62o=","-----END PRIVATE KEY-----"];
 var PK=PKL.join('\n');
-var CAL_ID="lizareineri@gmail.com";
+var CAL_IDS=["lizareineri@gmail.com","sjsrandjuju@gmail.com"];
 var SHEET_ID="1OohoYiVVdZkR7nRXAd6IU0i8WBbpTDqfWQYZrI3A0f0";
 var ZIP="37917";
 var INCOME_BUDGET=22148;
@@ -245,13 +245,18 @@ async function fetchEvents(){
     var now=new Date();
     var s=new Date(now.getFullYear(),now.getMonth()-1,1).toISOString();
     var e=new Date(now.getFullYear(),now.getMonth()+3,0).toISOString();
-    var url='https://www.googleapis.com/calendar/v3/calendars/'+encodeURIComponent(CAL_ID)+'/events?timeMin='+s+'&timeMax='+e+'&singleEvents=true&orderBy=startTime&maxResults=200';
-    var r=await fetch(url,{headers:{Authorization:'Bearer '+tok}});
-    var d=await r.json();
-    if(d.error)throw new Error(d.error.message);
-    events=(d.items||[]).map(function(ev,i){
+    var allItems=[];
+    var fetches=CAL_IDS.map(function(calId){
+      var url='https://www.googleapis.com/calendar/v3/calendars/'+encodeURIComponent(calId)+'/events?timeMin='+s+'&timeMax='+e+'&singleEvents=true&orderBy=startTime&maxResults=200';
+      return fetch(url,{headers:{Authorization:'Bearer '+tok}}).then(function(r){return r.json();}).then(function(d){
+        if(!d.error){var items=d.items||[];for(var i=0;i<items.length;i++)allItems.push(items[i]);}
+      });
+    });
+    await Promise.all(fetches);
+    events=allItems.map(function(ev,i){
       return{id:ev.id,title:ev.summary||'(No title)',start:new Date(ev.start.dateTime||ev.start.date),end:ev.end?new Date(ev.end.dateTime||ev.end.date):null,allDay:!ev.start.dateTime,ck:ev.colorId||(i%6)+''};
     });
+    events.sort(function(a,b){return a.start-b.start;});
     var keys=[];events.forEach(function(e){if(keys.indexOf(e.ck)<0)keys.push(e.ck);});
     keys.forEach(function(k,i){cmap[k]=COLORS[i%COLORS.length];});
     renderCalendar();renderUpcoming();
