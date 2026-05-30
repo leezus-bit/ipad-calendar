@@ -418,7 +418,7 @@ function renderUpcoming(){
   });
   document.getElementById('eventList').innerHTML=html;
 }
-window.onload=function(){
+document.addEventListener('DOMContentLoaded',function(){
   document.getElementById('prevBtn').onclick=function(){if(curView==='month')viewDate.setMonth(viewDate.getMonth()-1);else viewDate.setDate(viewDate.getDate()-7);renderCalendar();};
   document.getElementById('nextBtn').onclick=function(){if(curView==='month')viewDate.setMonth(viewDate.getMonth()+1);else viewDate.setDate(viewDate.getDate()+7);renderCalendar();};
   document.getElementById('secretTrigger').addEventListener('click',function(){
@@ -431,7 +431,7 @@ window.onload=function(){
   renderCalendar();
   fetchEvents();
   setInterval(fetchEvents,900000);
-};
+});
 </script>
 </body>
 </html>
